@@ -1,0 +1,32 @@
+data:
+    enabled_plugins.yaml: |
+      tasks:
+      task-plugins:
+        enabled-plugins:
+          - container
+          - sidecar
+          - k8s-array
+          - spark
+        default-for-task-types:
+          container: container
+          sidecar: sidecar
+          container_array: k8s-array
+          spark: spark
+    spark.yaml: |
+      plugins:
+        spark:
+          spark-config-default:
+          - spark.hadoop.fs.s3a.aws.credentials.provider: com.amazonaws.auth.DefaultAWSCredentialsProviderChain
+          - spark.hadoop.mapreduce.fileoutputcommitter.algorithm.version: "2"
+          - spark.kubernetes.allocation.batch.size: "50"
+          - spark.hadoop.fs.s3a.acl.default: BucketOwnerFullControl
+          - spark.hadoop.fs.s3n.impl: org.apache.hadoop.fs.s3a.S3AFileSystem
+          - spark.hadoop.fs.AbstractFileSystem.s3n.impl: org.apache.hadoop.fs.s3a.S3A
+          - spark.hadoop.fs.s3.impl: org.apache.hadoop.fs.s3a.S3AFileSystem
+          - spark.hadoop.fs.AbstractFileSystem.s3.impl: org.apache.hadoop.fs.s3a.S3A
+          - spark.hadoop.fs.s3a.impl: org.apache.hadoop.fs.s3a.S3AFileSystem
+          - spark.hadoop.fs.AbstractFileSystem.s3a.impl: org.apache.hadoop.fs.s3a.S3A
+          - spark.hadoop.fs.s3a.multipart.threshold: "536870912"
+          - spark.blacklist.enabled: "true"
+          - spark.blacklist.timeout: 5m
+          - spark.task.maxfailures: "8"

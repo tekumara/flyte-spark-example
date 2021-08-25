@@ -4,6 +4,7 @@ SHELL = /bin/bash -o pipefail
 .PHONY: help install check lint pyright test hooks install-hooks
 
 export FLYTECTL_CONFIG=$(HOME)/.flyte/config-sandbox.yaml
+export KUBECONFIG=$(HOME)/.flyte/k3s/k3s.yaml
 
 name = fspark
 
@@ -76,6 +77,15 @@ launchplan: exec.yaml
 ## execute
 exec: exec.yaml
 	flytectl create execution --project flyteexamples --domain development --execFile exec.yaml
+
+## enable the spark plugin (restarts flytepropeller)
+enable-spark:
+	kubectl -n flyte patch configmap flyte-propeller-config-d9bhkt4m5d --patch-file config/enable_spark_patch.yaml
+	kubectl -n flyte rollout restart deployment/flytepropeller
+
+## dump propeller configmap
+propeller-config:
+	kubectl get configmap -n flyte flyte-propeller-config-d9bhkt4m5d -o yaml
 
 ## run pre-commit git hooks on all files
 hooks: $(venv)

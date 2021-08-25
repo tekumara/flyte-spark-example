@@ -3,6 +3,7 @@
 Example Spark workflow on Flyte adapted from the [pyspark pi example](https://docs.flyte.org/projects/cookbook/en/latest/auto/integrations/kubernetes/k8s_spark/pyspark_pi.html).
 
 The workflow contains two tasks:
+
 1. A Spark task to calculate pi
 1. A Python task to print out the result
 
@@ -16,33 +17,41 @@ Follow these steps to run the workflow inside the [Flyte sandbox](https://docs.f
 
 1. Start sandbox, mounting the current dir (ie: this repo)
 
-    ```
-    flytectl sandbox start --source .
-    ```
+   ```
+   flytectl sandbox start --source .
+   ```
 
 1. Build the docker container inside the sandbox
 
-    ```
-    version=v1 make build
-    ```
+   ```
+   version=v1 make build
+   ```
 
 1. Package and register
 
-    ```
-    version=v1 make package register
-    ```
+   ```
+   version=v1 make package register
+   ```
 
 1. Create execution spec from launchplan
 
-    ```
-    make launchplan
-    ```
+   ```
+   make launchplan
+   ```
 
 1. Execute
 
-    ```
-    make exec
-    ```
+   ```
+   make exec
+   ```
+
+## Enable the Spark backend plugin
+
+To use the Spark backend plugin (restarts flytepropeller)
+
+```
+make enable-spark
+```
 
 ## Development
 
