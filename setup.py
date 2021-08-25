@@ -15,7 +15,7 @@ setup(
     package_data={
         "": ["py.typed"],
     },
-    install_requires=[],
+    install_requires=["flytekit==0.21.4", "flytekitplugins-spark==0.21.4"],
     extras_require={
         "dev": [
             "black==21.7b0",
