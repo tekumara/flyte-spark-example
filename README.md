@@ -1,12 +1,18 @@
 # fspark
 
-Example Spark Job on Flyte
+Example Spark workflow on Flyte adapted from the [pyspark pi example](https://docs.flyte.org/projects/cookbook/en/latest/auto/integrations/kubernetes/k8s_spark/pyspark_pi.html).
+
+The workflow contains two tasks:
+1. A Spark task to calculate pi
+1. A Python task to print out the result
+
+## Usage
 
 `make run` to run locally
 
 ## Sandbox
 
-Follow this steps to run inside the [Flyte sandbox](https://docs.flyte.org/en/latest/deployment/sandbox.html).
+Follow these steps to run the workflow inside the [Flyte sandbox](https://docs.flyte.org/en/latest/deployment/sandbox.html).
 
 1. Start sandbox, mounting the current dir (ie: this repo)
 
@@ -58,7 +64,3 @@ To get started run `make install`. This will:
 Then run `make` to see the options for running checks, tests etc.
 
 `. .venv/bin/activate` activates the virtualenv. When the requirements in `setup.py` change, the virtualenv is updated by the make targets that use the virtualenv.
-
-```
-
-```
