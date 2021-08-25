@@ -3,6 +3,10 @@ SHELL = /bin/bash -o pipefail
 .DEFAULT_GOAL := help
 .PHONY: help install check lint pyright test hooks install-hooks
 
+export FLYTECTL_CONFIG=$(HOME)/.flyte/config-sandbox.yaml
+
+name = fspark
+
 ## display help message
 help:
 	@awk '/^##.*$$/,/^[~\/\.0-9a-zA-Z_-]+:/' $(MAKEFILE_LIST) | awk '!(NR%2){print $$0p}{p=$$0}' | awk 'BEGIN {FS = ":.*?##"}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}' | sort
@@ -46,6 +50,32 @@ pyright: node_modules $(venv)
 ## run tests
 test: $(venv)
 	$(venv)/bin/pytest
+
+## run job locally
+run: $(venv)
+	$(venv)/bin/python fspark/main.py
+
+## build the docker container inside the sandbox
+build:
+	flytectl sandbox exec -- docker build . --tag $(name):$(version)
+
+## package (serialise to protobuf)
+package: $(venv)
+	$(venv)/bin/pyflyte package -f --image $(name):$(version)
+
+## register
+register:
+	flytectl register files --project flyteexamples --domain development --archive flyte-package.tgz --version v1
+
+exec.yaml:
+	flytectl get launchplan -p flyteexamples -d development $(name).main.my_spark --execFile exec.yaml
+
+## create execution spec for launchplan
+launchplan: exec.yaml
+
+## execute
+exec: exec.yaml
+	flytectl create execution --project flyteexamples --domain development --execFile exec.yaml
 
 ## run pre-commit git hooks on all files
 hooks: $(venv)

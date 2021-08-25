@@ -15,3 +15,6 @@ pip-wheel-metadata/
 node_modules/
 .venv/
 .kube/
+.bash_history
+flyte-package.tgz
+exec.yaml
