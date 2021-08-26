@@ -66,7 +66,7 @@ package: $(venv)
 
 ## register
 register:
-	flytectl register files --project flyteexamples --domain development --archive flyte-package.tgz --version v1
+	flytectl register files --project flyteexamples --domain development --archive flyte-package.tgz --version $(version)
 
 exec.yaml:
 	flytectl get launchplan -p flyteexamples -d development $(name).main.my_spark --execFile exec.yaml
@@ -81,7 +81,7 @@ exec: exec.yaml
 ## enable the spark plugin (restarts flytepropeller)
 enable-spark:
 	kubectl -n flyte patch configmap flyte-propeller-config-d9bhkt4m5d --patch-file config/enable_spark_patch.yaml
-	kubectl -n flyte patch configmap clusterresource-template-dtg8ff28mt --patch-file config/spark_rbac.yaml
+	kubectl -n flyte patch configmap clusterresource-template-dtg8ff28mt --patch-file config/spark_rbac_patch.yaml
 	kubectl -n flyte rollout restart deployment/flytepropeller
 
 ## install the spark operator

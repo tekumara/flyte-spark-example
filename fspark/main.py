@@ -14,8 +14,8 @@ from pyspark.sql import SparkSession
     task_config=Spark(
         # this configuration is applied to the spark cluster
         spark_conf={
-            "spark.driver.memory": "1000M",
-            "spark.executor.memory": "1000M",
+            "spark.driver.memory": "512M",
+            "spark.executor.memory": "512M",
             "spark.executor.cores": "1",
             "spark.executor.instances": "2",
             "spark.driver.cores": "1",
