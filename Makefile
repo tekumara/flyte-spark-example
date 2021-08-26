@@ -81,7 +81,13 @@ exec: exec.yaml
 ## enable the spark plugin (restarts flytepropeller)
 enable-spark:
 	kubectl -n flyte patch configmap flyte-propeller-config-d9bhkt4m5d --patch-file config/enable_spark_patch.yaml
+	kubectl -n flyte patch configmap clusterresource-template-dtg8ff28mt --patch-file config/spark_rbac.yaml
 	kubectl -n flyte rollout restart deployment/flytepropeller
+
+## install the spark operator
+install-spark-operator:
+	helm repo add spark-operator https://googlecloudplatform.github.io/spark-on-k8s-operator
+	helm install flyte-spark spark-operator/spark-operator --namespace spark-operator --create-namespace
 
 ## dump propeller configmap
 propeller-config:

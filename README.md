@@ -7,6 +7,13 @@ The workflow contains two tasks:
 1. A Spark task to calculate pi
 1. A Python task to print out the result
 
+## Prerequisites
+
+- make
+- node (required for pyright. Install via `brew install node`)
+- python >= 3.7
+- flytectl `brew install flyteorg/homebrew-tap/flytectl`
+
 ## Usage
 
 `make run` to run locally
@@ -45,24 +52,21 @@ Follow these steps to run the workflow inside the [Flyte sandbox](https://docs.f
    make exec
    ```
 
-## Enable the Spark backend plugin
+## Using the Spark Operator
 
-To use the Spark backend plugin (restarts flytepropeller)
+1. Install the spark operator
 
-```
-make enable-spark
-```
+    ```
+    make install-spark-operator
+    ```
+
+1. Enable the Spark backend plugin (restarts flytepropeller)
+
+    ```
+    make install-spark-operator enable-spark
+    ```
 
 ## Development
-
-### Prerequisites
-
-- make
-- node (required for pyright. Install via `brew install node`)
-- python >= 3.7
-- flytectl `brew install flyteorg/homebrew-tap/flytectl`
-
-### Getting started
 
 To get started run `make install`. This will:
 
