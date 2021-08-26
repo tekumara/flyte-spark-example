@@ -1,17 +1,17 @@
 data:
     enabled_plugins.yaml: |
       tasks:
-      task-plugins:
-        enabled-plugins:
-          - container
-          - sidecar
-          - k8s-array
-          - spark
-        default-for-task-types:
-          container: container
-          sidecar: sidecar
-          container_array: k8s-array
-          spark: spark
+        task-plugins:
+          enabled-plugins:
+            - container
+            - sidecar
+            - k8s-array
+            - spark
+          default-for-task-types:
+            container: container
+            sidecar: sidecar
+            container_array: k8s-array
+            spark: spark
     spark.yaml: |
       plugins:
         spark:
