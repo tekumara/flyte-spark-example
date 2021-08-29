@@ -56,6 +56,22 @@ test: $(venv)
 run: $(venv)
 	$(venv)/bin/python fspark/main.py
 
+## create and start the sandbox (mounting the current dir)
+sandbox-create:
+	flytectl sandbox start --source .
+
+## start the sandbox
+sandbox-start:
+	docker start flyte-sandbox
+	@echo Flyte UI is available at http://localhost:30081/console
+	@echo Add KUBECONFIG and FLYTECTL_CONFIG to your environment variable
+	@echo 'export KUBECONFIG=$$KUBECONFIG:$(HOME)/.kube/config:$(HOME)/.flyte/k3s/k3s.yaml'
+	@echo 'export FLYTECTL_CONFIG=$(HOME)/.flyte/config-sandbox.yaml'
+
+## enter shell in sandbox
+sandbox-shell:
+	docker exec -it flyte-sandbox /bin/bash
+
 ## build the docker container inside the sandbox
 build:
 	flytectl sandbox exec -- docker build . --tag $(name):$(version)
@@ -87,7 +103,20 @@ enable-spark:
 ## install the spark operator
 install-spark-operator:
 	helm repo add spark-operator https://googlecloudplatform.github.io/spark-on-k8s-operator
-	helm install flyte-spark spark-operator/spark-operator --namespace spark-operator --create-namespace
+	helm install flyte-spark spark-operator/spark-operator --namespace spark-operator --create-namespace --set ingressUrlFormat='/{{$$appNamespace}}/{{$$appName}}'
+
+## uninstall the spark operator
+uninstall-spark-operator:
+	helm uninstall flyte-spark --namespace spark-operator
+	kubectl delete serviceaccount flyte-spark-spark-operator --namespace spark-operator
+
+## list spark apps
+get-sparkapplication:
+	 kubectl get sparkapplication -n flyteexamples-development
+
+## list spark ui paths
+get-sparkui:
+	kubectl get ingress -n flyteexamples-development -o json | jq -r '"http://localhost:30081"+.items[].spec.rules[].http.paths[].path'
 
 ## dump propeller configmap
 propeller-config:

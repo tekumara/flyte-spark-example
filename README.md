@@ -22,10 +22,10 @@ The workflow contains two tasks:
 
 Follow these steps to run the workflow inside the [Flyte sandbox](https://docs.flyte.org/en/latest/deployment/sandbox.html).
 
-1. Start sandbox, mounting the current dir (ie: this repo)
+1. Create and start the sandbox, mounting the current dir (ie: this repo)
 
    ```
-   flytectl sandbox start --source .
+   make sandbox-create
    ```
 
 1. Build the docker container inside the sandbox
@@ -63,8 +63,12 @@ Follow these steps to run the workflow inside the [Flyte sandbox](https://docs.f
 1. Enable the Spark backend plugin (restarts flytepropeller)
 
     ```
-    make install-spark-operator enable-spark
+    make enable-spark
     ```
+
+### Known Issues
+
+When accessing the SparkUI via the ingress (eg: []()), it will redirect to _/jobs_ which 404s. See [#1329](https://github.com/GoogleCloudPlatform/spark-on-k8s-operator/issues/1329)
 
 ## Development
 
