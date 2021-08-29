@@ -116,7 +116,7 @@ get-sparkapplication:
 
 ## list spark ui paths
 get-sparkui:
-	kubectl get ingress -n flyteexamples-development -o json | jq -r '"http://localhost:30081"+.items[].spec.rules[].http.paths[].path'
+	kubectl get ingress -n flyteexamples-development -o jsonpath='{range .items[*]}{"\n"}http://localhost:30081{.spec.rules[*].http.paths[*].path}{end}'
 
 ## dump propeller configmap
 propeller-config:
