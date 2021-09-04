@@ -114,9 +114,9 @@ uninstall-spark-operator:
 get-sparkapplication:
 	 kubectl get sparkapplication -n flyteexamples-development
 
-## list spark ui paths
-get-sparkui:
-	kubectl get ingress -n flyteexamples-development -o jsonpath='{range .items[*]}{"\n"}http://localhost:30081{.spec.rules[*].http.paths[*].path}{end}'
+## watch spark ui ingress paths
+watch-sparkui:
+	kubectl get ingress -n flyteexamples-development -w -o jsonpath='http://localhost:30081{.spec.rules[*].http.paths[*].path}{"\n"}' -w
 
 ## dump propeller configmap
 propeller-config:
