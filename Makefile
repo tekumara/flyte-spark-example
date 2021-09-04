@@ -1,7 +1,7 @@
 MAKEFLAGS += --warn-undefined-variables
 SHELL = /bin/bash -o pipefail
 .DEFAULT_GOAL := help
-.PHONY: help install check lint pyright test hooks install-hooks
+.PHONY: help install check lint pyright test hooks install-hooks exec.yaml
 
 export FLYTECTL_CONFIG=$(HOME)/.flyte/config-sandbox.yaml
 export KUBECONFIG=$(HOME)/.flyte/k3s/k3s.yaml
@@ -85,6 +85,7 @@ register:
 	flytectl register files --project flyteexamples --domain development --archive flyte-package.tgz --version $(version)
 
 exec.yaml:
+	rm -f exec.yaml
 	flytectl get launchplan -p flyteexamples -d development $(name).main.my_spark --execFile exec.yaml
 
 ## create execution spec for launchplan
@@ -96,8 +97,8 @@ exec: exec.yaml
 
 ## enable the spark plugin (restarts flytepropeller)
 enable-spark:
-	kubectl -n flyte patch configmap flyte-propeller-config-d9bhkt4m5d --patch-file config/enable_spark_patch.yaml
-	kubectl -n flyte patch configmap clusterresource-template-dtg8ff28mt --patch-file config/spark_rbac_patch.yaml
+	kubectl -n flyte patch configmap flyte-propeller-config --patch-file config/enable_spark_patch.yaml
+	kubectl -n flyte patch configmap clusterresource-template --patch-file config/spark_rbac_patch.yaml
 	kubectl -n flyte rollout restart deployment/flytepropeller
 
 ## install the spark operator
@@ -120,7 +121,7 @@ watch-sparkui:
 
 ## dump propeller configmap
 propeller-config:
-	kubectl get configmap -n flyte flyte-propeller-config-d9bhkt4m5d -o yaml
+	kubectl get configmap -n flyte flyte-propeller-config -o yaml
 
 ## run pre-commit git hooks on all files
 hooks: $(venv)
