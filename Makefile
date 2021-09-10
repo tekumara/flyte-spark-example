@@ -94,12 +94,16 @@ launchplan: exec.yaml
 ## execute
 exec: exec.yaml
 	flytectl create execution --project flyteexamples --domain development --execFile exec.yaml
+	@echo -e "\nVisit http://localhost:30081/console/projects/flyteexamples/domains/development/workflows/fspark.main.my_spark"
 
 ## enable the spark plugin (restarts flytepropeller)
 enable-spark:
 	kubectl -n flyte patch configmap flyte-propeller-config --patch-file config/enable_spark_patch.yaml
 	kubectl -n flyte patch configmap clusterresource-template --patch-file config/spark_rbac_patch.yaml
 	kubectl -n flyte rollout restart deployment/flytepropeller
+	# enable ingress: *.vcap.me resolves to 127.0.0.1
+	kubectl -n flyte patch deployment flyte-sparkoperator --type json -p '[{"op": "replace", "path": "/spec/template/spec/containers/0/args/3", "value":"-ingress-url-format={{$$appNamespace}}.vcap.me/{{$$appName}}"}]'
+	kubectl -n flyte rollout restart deployment/flyte-sparkoperator
 
 ## install the spark operator
 install-spark-operator:
