@@ -9,7 +9,8 @@ setup(
     package_data={
         "": ["py.typed"],
     },
-    install_requires=["flytekit==0.21.4", "flytekitplugins-spark==0.21.4", "pyspark==3.0.1"],
+    # flytekitplugins-spark depends on >=3.0.0, override with specific version
+    install_requires=["flytekit==0.21.4", "flytekitplugins-spark==0.21.4", "pyspark==3.1.2"],
     extras_require={
         "dev": [
             "black==21.7b0",

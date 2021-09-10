@@ -1,4 +1,4 @@
-FROM python:3.8-slim-buster
+FROM tekumara/spark:3.1.2-hadoop3.2-java11-python3.8-bullseye
 
 WORKDIR /root
 ENV VENV /opt/venv
@@ -14,21 +14,10 @@ RUN pip3 install awscli
 # RUN curl -sSL https://sdk.cloud.google.com | bash
 # ENV PATH="$PATH:/root/google-cloud-sdk/bin"
 
-COPY flytekit_install_spark3.sh /root
-RUN /root/flytekit_install_spark3.sh
-# Adding Tini support for the spark pods
-RUN wget  https://github.com/krallin/tini/releases/download/v0.18.0/tini && \
-    cp tini /sbin/tini && cp tini /usr/bin/tini && \
-    chmod a+x /sbin/tini && chmod a+x /usr/bin/tini
-
 # Setup Spark environment
-ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64
-ENV SPARK_HOME /opt/spark
-ENV SPARK_VERSION 3.0.1
 ENV PYSPARK_PYTHON ${VENV}/bin/python3
 ENV PYSPARK_DRIVER_PYTHON ${VENV}/bin/python3
 
-ENV VENV /opt/venv
 # Virtual environment
 RUN python3 -m venv ${VENV}
 ENV PATH="${VENV}/bin:$PATH"
