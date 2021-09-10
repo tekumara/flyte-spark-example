@@ -102,7 +102,7 @@ enable-spark:
 	kubectl -n flyte patch configmap clusterresource-template --patch-file config/spark_rbac_patch.yaml
 	kubectl -n flyte rollout restart deployment/flytepropeller
 	# enable ingress: *.vcap.me resolves to 127.0.0.1
-	kubectl -n flyte patch deployment flyte-sparkoperator --type json -p '[{"op": "replace", "path": "/spec/template/spec/containers/0/args/3", "value":"-ingress-url-format={{$$appNamespace}}.vcap.me/{{$$appName}}"}]'
+	kubectl -n flyte patch deployment flyte-sparkoperator --type json -p '[{"op": "replace", "path": "/spec/template/spec/containers/0/args/3", "value":"-ingress-url-format={{$$appName}}.vcap.me"}]'
 	kubectl -n flyte rollout restart deployment/flyte-sparkoperator
 
 ## install the spark operator
@@ -121,7 +121,7 @@ get-sparkapplication:
 
 ## watch spark ui ingress paths
 watch-sparkui:
-	kubectl get ingress -n flyteexamples-development -w -o jsonpath='http://localhost:30081{.spec.rules[*].http.paths[*].path}{"\n"}' -w
+	kubectl get ingress -n flyteexamples-development -w -o jsonpath='http://{.spec.rules[*].host}:30081{"\n"}' -w
 
 ## dump propeller configmap
 propeller-config:

@@ -52,15 +52,11 @@ Follow these steps to run the workflow inside the [Flyte sandbox](https://docs.f
    make launchplan
    ```
 
-1. Execute
+1. Execute and watch for new ingress to the spark UI
 
    ```
-   make exec
+   make exec watch-sparkui
    ```
-
-### Known Issues
-
-When accessing the SparkUI via the ingress (eg: [http://localhost:30081/flyteexamples-development/cze42wd3kt-n0-0](http://localhost:30081/flyteexamples-development/cze42wd3kt-n0-0)), it will redirect to _/jobs_ which 404s. See [#1329](https://github.com/GoogleCloudPlatform/spark-on-k8s-operator/issues/1329)
 
 ## Development
 
