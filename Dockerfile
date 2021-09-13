@@ -22,11 +22,17 @@ ENV PYSPARK_DRIVER_PYTHON ${VENV}/bin/python3
 RUN python3 -m venv ${VENV}
 ENV PATH="${VENV}/bin:$PATH"
 
+# make pyspark package available with running python ie: outside of spark
+# this avoids the need to reinstall pyspark
+COPY pyspark/setup.py /opt/spark/python
+RUN pip install -e /opt/spark/python
+ENV PYTHONPATH "${SPARK_HOME}/python/lib/py4j-0.10.9-src.zip:$PYTHONPATH"
+
 # Copy the actual code
 COPY . /root
 
 # Install Python dependencies
-RUN pip install -e .
+RUN pip install --no-cache-dir -e .
 
 # This tag is supplied by the build script and will be used to determine the version
 # when registering tasks, workflows, and launch plans
